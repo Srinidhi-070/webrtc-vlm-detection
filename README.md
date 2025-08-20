@@ -1,11 +1,3 @@
-Got it 👍
-I’ll polish your README, keep all the great visuals (badges, mermaid diagram, ASCII architecture), and add a **short apology note** about redundant files/errors while clarifying that it’s an **assignment-driven project**.
-
-Here’s the **updated README.md** draft:
-
----
-
-````markdown
 <div align="center">
 
 # 🎥 WebRTC VLM Detection
