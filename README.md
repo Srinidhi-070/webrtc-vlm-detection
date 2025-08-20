@@ -49,16 +49,22 @@
 
 ```mermaid
 graph LR
-    A[📱 Phone<br>Camera] -->|WebRTC Stream| B[💻 PC<br>Browser]
-    B --> C[🤖 AI<br>Detection]
-    C --> D[📊 Bounding<br>Boxes]
-    D --> E[🎯 Real-time<br>Overlay]
+    A[📱 Phone<br>Camera]
+    B[💻 PC<br>Browser]
+    C[🤖 AI<br>Detection]
+    D[📊 Bounding<br>Boxes]
+    E[🎯 Real-time<br>Overlay]
 
-    style A fill:#ff6b6b
-    style B fill:#4ecdc4
-    style C fill:#45b7d1
-    style D fill:#96ceb4
-    style E fill:#feca57
+    A -->|WebRTC Stream| B
+    B --> C
+    C --> D
+    D --> E
+
+    style A fill:#ff6b6b,color:#000
+    style B fill:#4ecdc4,color:#000
+    style C fill:#45b7d1,color:#000
+    style D fill:#96ceb4,color:#000
+    style E fill:#feca57,color:#000
 ```
 
 ## 🚀 Quick Start
