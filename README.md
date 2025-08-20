@@ -21,9 +21,8 @@
 ---
 
 ## ⚠️ Note
-This project was built as part of an **academic assignment**.  
-During development, there were multiple iterations with redundant files, corrections, and some trial-and-error.  
-We apologize for the extra clutter and errors in earlier versions — the current structure reflects a **clean and functional implementation** as per assignment goals.
+This project was developed as part of an interview assignment.
+The work went through several iterations with redundant files and trial-and-error during the build process. While earlier versions may contain extra files or corrections, the current structure is streamlined, functional, and aligned with the assignment requirements.
 
 ---
 
