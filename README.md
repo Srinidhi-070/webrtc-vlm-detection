@@ -1,3 +1,11 @@
+Got it 👍
+I’ll polish your README, keep all the great visuals (badges, mermaid diagram, ASCII architecture), and add a **short apology note** about redundant files/errors while clarifying that it’s an **assignment-driven project**.
+
+Here’s the **updated README.md** draft:
+
+---
+
+````markdown
 <div align="center">
 
 # 🎥 WebRTC VLM Detection
@@ -14,9 +22,18 @@
 
 ### 📱➡️💻 Turn your phone into a wireless camera with real-time AI detection!
 
-*Stream live video from your phone to PC via WebRTC and watch AI detect objects in real-time with beautiful bounding box overlays.*
+*Stream live video from your phone to PC via WebRTC and watch AI detect objects in real-time with bounding box overlays.*
 
 </div>
+
+---
+
+## ⚠️ Note
+This project was built as part of an **academic assignment**.  
+During development, there were multiple iterations with redundant files, corrections, and some trial-and-error.  
+We apologize for the extra clutter and errors in earlier versions — the current structure reflects a **clean and functional implementation** as per assignment goals.
+
+---
 
 ## ✨ Features
 
@@ -45,6 +62,8 @@
 </tr>
 </table>
 
+---
+
 ## 🎬 Demo
 
 ```mermaid
@@ -65,7 +84,9 @@ graph LR
     style C fill:#45b7d1,color:#000
     style D fill:#96ceb4,color:#000
     style E fill:#feca57,color:#000
-```
+````
+
+---
 
 ## 🚀 Quick Start
 
@@ -77,13 +98,12 @@ docker-compose up --build
 
 # 🌐 With remote access (requires ngrok token)
 NGROK_AUTHTOKEN=your_token docker-compose --profile remote up --build
-
 ```
 
 ### 💻 **Local Development**
 
 ```bash
-# 🪟 Windows(local)
+# 🪟 Windows (local)
 start.bat
 
 # 🪟 Windows (Remote Access)
@@ -98,10 +118,12 @@ chmod +x ./start.sh && ./start.sh
 
 ### 📱 **Usage Steps**
 
-1. **🖥️ PC**: Open http://localhost:8000
+1. **🖥️ PC**: Open [http://localhost:8000](http://localhost:8000)
 2. **📷 Start Camera** → **🔗 Connect Phone** → **🎯 Start Detection**
 3. **📱 Phone**: Scan QR code → Auto-connects as remote camera
 4. **🎉 Enjoy**: Watch real-time detection on both camera feeds!
+
+---
 
 ## 🏗️ Architecture
 
@@ -128,93 +150,76 @@ chmod +x ./start.sh && ./start.sh
 
 </div>
 
+---
+
 ## 🛠️ Tech Stack
 
 <div align="center">
 
-| Frontend | Backend | AI/CV | DevOps |
-|----------|---------|-------|--------|
-| ![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black) | ![FastAPI](https://img.shields.io/badge/-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white) | ![OpenCV](https://img.shields.io/badge/-OpenCV-5C3EE8?style=flat-square&logo=opencv&logoColor=white) | ![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white) |
-| ![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat-square&logo=vite&logoColor=white) | ![Python](https://img.shields.io/badge/-Python-3776AB?style=flat-square&logo=python&logoColor=white) | ![NumPy](https://img.shields.io/badge/-NumPy-013243?style=flat-square&logo=numpy&logoColor=white) | ![ngrok](https://img.shields.io/badge/-ngrok-1F1E37?style=flat-square&logo=ngrok&logoColor=white) |
-| ![WebRTC](https://img.shields.io/badge/-WebRTC-333333?style=flat-square&logo=webrtc&logoColor=white) | ![WebSocket](https://img.shields.io/badge/-WebSocket-010101?style=flat-square&logo=socketdotio&logoColor=white) | ![ONNX](https://img.shields.io/badge/-ONNX-005CED?style=flat-square&logo=onnx&logoColor=white) | ![Compose](https://img.shields.io/badge/-Compose-2496ED?style=flat-square&logo=docker&logoColor=white) |
+| Frontend     | Backend   | AI/CV       | DevOps           |
+| ------------ | --------- | ----------- | ---------------- |
+| React + Vite | FastAPI   | OpenCV      | Docker + Compose |
+| WebRTC       | WebSocket | NumPy, ONNX | ngrok            |
 
 </div>
 
+---
+
 ## 📊 Performance
 
-- **🚀 Latency**: < 200ms end-to-end
-- **📹 FPS**: 5-10 FPS real-time detection
-- **🎯 Detection**: Multi-color object recognition
-- **📱 Mobile**: Optimized for phone cameras
-- **🌐 Network**: Efficient WebRTC streaming
+* **🚀 Latency**: < 200ms end-to-end
+* **📹 FPS**: 5–10 FPS real-time detection
+* **🎯 Detection**: Multi-color object recognition
+* **📱 Mobile**: Optimized for phone cameras
+* **🌐 Network**: Efficient WebRTC streaming
 
-## 🔧 Configuration
-
-### 🎨 **Detection Colors**
-- 🔴 **Red Objects** - Primary detection
-- 🔵 **Blue Objects** - Secondary detection  
-- 🟢 **Green Objects** - Tertiary detection
-- 🟡 **Yellow Objects** - Quaternary detection
-
-### ⚙️ **Environment Variables**
-```bash
-SERVE_BUILT=true          # Production mode
-FRONTEND_URL=http://...   # Frontend URL
-BACKEND_URL=http://...    # Backend URL
-NGROK_AUTHTOKEN=...       # Remote access token
-```
+---
 
 ## 🐛 Troubleshooting
 
 <details>
 <summary>📱 <strong>Phone Connection Issues</strong></summary>
 
-- ✅ Ensure both devices on same WiFi
-- ✅ Check camera permissions in browser
-- ✅ Try different browsers (Chrome recommended)
-- ✅ Use ngrok for remote access
+* ✅ Ensure both devices are on same WiFi
+* ✅ Check camera permissions in browser
+* ✅ Try different browsers (Chrome recommended)
+* ✅ Use ngrok for remote access
 
 </details>
 
 <details>
 <summary>🎥 <strong>Video Stream Problems</strong></summary>
 
-- ✅ Check WebRTC connection in console
-- ✅ Verify STUN server connectivity
-- ✅ Test with `chrome://webrtc-internals`
-- ✅ Restart both applications
+* ✅ Check WebRTC connection in console
+* ✅ Verify STUN server connectivity
+* ✅ Test with `chrome://webrtc-internals`
+* ✅ Restart both applications
 
 </details>
 
-<details>
-<summary>🐳 <strong>Docker Issues</strong></summary>
-
-- ✅ Ensure Docker Desktop is running
-- ✅ Check port 8000 availability
-- ✅ Clear Docker cache: `docker system prune`
-- ✅ Run as administrator if needed
-
-</details>
+---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how you can help:
+This is primarily an **assignment project**, but contributions for cleanup, improvements, and extended features are welcome:
 
-- 🐛 **Bug Reports** - Found an issue? Let us know!
-- ✨ **Feature Requests** - Have an idea? Share it!
-- 🔧 **Pull Requests** - Code improvements welcome!
-- 📖 **Documentation** - Help improve our docs!
+* 🐛 Bug Reports
+* ✨ Feature Requests
+* 🔧 Pull Requests
+* 📖 Documentation
+
+---
 
 ## 📄 License
 
 <div align="center">
 
-**MIT License** - Feel free to use this project for anything!
+**MIT License** - Free to use for learning & development
 
 ---
 
-### 🌟 **Star this repo if you found it helpful!** 🌟
+### 🌟 *Star this repo if you found it helpful!* 🌟
 
-*Made with ❤️ for the computer vision community*
+*Made with ❤️ as part of an academic assignment in Computer Vision*
 
 </div>
