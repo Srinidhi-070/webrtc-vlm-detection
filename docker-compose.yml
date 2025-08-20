@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  webrtc-vlm:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SERVE_BUILT=true
+      - FRONTEND_URL=http://localhost:8000
+      - BACKEND_URL=http://localhost:8000
+    restart: unless-stopped
+    
+  # Optional: ngrok service for remote access
+  ngrok:
+    image: ngrok/ngrok:latest
+    profiles: ["remote"]
+    ports:
+      - "4040:4040"
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command: ["http", "webrtc-vlm:8000"]
+    depends_on:
+      - webrtc-vlm

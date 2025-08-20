@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC VLM Detection</title>
+</head>
+<body>
+    <script>
+        // Bypass ngrok warning and redirect to main app
+        const params = new URLSearchParams(window.location.search);
+        const mainUrl = window.location.origin + '/' + window.location.search;
+        
+        // Add bypass headers and redirect
+        fetch(mainUrl, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        }).then(() => {
+            window.location.href = mainUrl;
+        }).catch(() => {
+            // Fallback: just redirect
+            window.location.href = mainUrl;
+        });
+    </script>
+    <p>Connecting...</p>
+</body>
+</html>
