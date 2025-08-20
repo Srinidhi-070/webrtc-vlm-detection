@@ -49,11 +49,11 @@
 
 ```mermaid
 graph LR
-    A[📱 Phone Camera] -->|WebRTC Stream| B[💻 PC Browser]
-    B --> C[🤖 AI Detection]
-    C --> D[📊 Bounding Boxes]
-    D --> E[🎯 Real-time Overlay]
-    
+    A[📱 Phone<br>Camera] -->|WebRTC Stream| B[💻 PC<br>Browser]
+    B --> C[🤖 AI<br>Detection]
+    C --> D[📊 Bounding<br>Boxes]
+    D --> E[🎯 Real-time<br>Overlay]
+
     style A fill:#ff6b6b
     style B fill:#4ecdc4
     style C fill:#45b7d1
