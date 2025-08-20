@@ -77,13 +77,17 @@ docker-compose up --build
 
 # 🌐 With remote access (requires ngrok token)
 NGROK_AUTHTOKEN=your_token docker-compose --profile remote up --build
+
 ```
 
 ### 💻 **Local Development**
 
 ```bash
-# 🪟 Windows
+# 🪟 Windows(local)
 start.bat
+
+# 🪟 Windows (Remote Access)
+quick_remote.bat
 
 # 🐧 Linux/macOS
 chmod +x ./start.sh && ./start.sh
