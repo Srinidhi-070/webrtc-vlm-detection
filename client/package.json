@@ -10,10 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tensorflow-models/coco-ssd": "^2.2.2",
-    "@tensorflow/tfjs": "^4.20.0",
-    "@tensorflow/tfjs-backend-wasm": "^4.20.0",
-    "onnxruntime-web": "^1.20.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

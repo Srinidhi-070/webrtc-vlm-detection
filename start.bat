@@ -40,11 +40,14 @@ if not exist "client\node_modules" (
 )
 
 echo [start] Starting backend on http://localhost:8000
-start /B python -m uvicorn server.app:app --host 0.0.0.0 --port 8000
+start "Backend Server" python -m uvicorn server.app:app --host 0.0.0.0 --port 8000
+
+echo [start] Waiting 3 seconds for backend to start...
+timeout /t 3 /nobreak >nul
 
 echo [start] Starting frontend on http://localhost:5173
 cd client
-start /B npm run dev -- --host 0.0.0.0
+start "Frontend Server" npm run dev -- --host 0.0.0.0
 cd ..
 
 echo.
@@ -57,6 +60,7 @@ echo   1) Open http://localhost:5173 on laptop
 echo   2) Scan the QR code or open the shown URL on your phone
 echo   3) Start Camera -^> Start Detection
 echo.
-echo Press Ctrl+C to stop both servers.
+echo Both servers are running in separate windows.
+echo Close those windows to stop the servers.
 
 pause

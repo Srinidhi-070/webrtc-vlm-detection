@@ -78,28 +78,49 @@ export default function App() {
     return () => stopLocalCamera(localVideoRef.current);
   }, [running, detecting]);
 
-  // Draw detection overlays (normalized coords) on remote canvas (fallback to local canvas)
+  // Draw detection overlays only on remote canvas
   useEffect(() => {
-    const canvas = remoteCanvasRef.current || localCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    detections.forEach((d) => {
-      const x1 = Math.round((d.xmin || 0) * canvas.width);
-      const y1 = Math.round((d.ymin || 0) * canvas.height);
-      const x2 = Math.round((d.xmax || 0) * canvas.width);
-      const y2 = Math.round((d.ymax || 0) * canvas.height);
-      ctx.strokeStyle = "red";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(x1, y1, Math.max(1, x2 - x1), Math.max(1, y2 - y1));
-      const text = `${d.label || "obj"}: ${(d.score || 0).toFixed(2)}`;
-      ctx.font = "14px Arial";
-      const tw = ctx.measureText(text).width;
-      ctx.fillStyle = "red";
-      ctx.fillRect(x1, Math.max(0, y1 - 20), tw + 10, 20);
-      ctx.fillStyle = "white";
-      ctx.fillText(text, x1 + 5, Math.max(12, y1 - 5));
-    });
+    const canvas = remoteCanvasRef.current;
+    const video = remoteVideoRef.current;
+    if (!canvas || !video) return;
+    
+    const updateCanvas = () => {
+      const rect = video.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (detections.length > 0) {
+        detections.forEach((d) => {
+          const x1 = Math.round((d.xmin || 0) * canvas.width);
+          const y1 = Math.round((d.ymin || 0) * canvas.height);
+          const x2 = Math.round((d.xmax || 0) * canvas.width);
+          const y2 = Math.round((d.ymax || 0) * canvas.height);
+          
+          ctx.strokeStyle = "#ff0000";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(x1, y1, Math.max(1, x2 - x1), Math.max(1, y2 - y1));
+          
+          const text = `${d.label || "obj"}: ${(d.score || 0).toFixed(2)}`;
+          ctx.font = "16px Arial";
+          ctx.fillStyle = "#ff0000";
+          const tw = ctx.measureText(text).width;
+          ctx.fillRect(x1, Math.max(0, y1 - 22), tw + 10, 22);
+          ctx.fillStyle = "white";
+          ctx.fillText(text, x1 + 5, Math.max(14, y1 - 5));
+        });
+      }
+    };
+    
+    updateCanvas();
+    const resizeObserver = new ResizeObserver(updateCanvas);
+    resizeObserver.observe(video);
+    
+    return () => resizeObserver.disconnect();
   }, [detections]);
 
   // Auto-start for phone
@@ -152,7 +173,10 @@ export default function App() {
         console.log('✅ Setting remote stream');
         if (remoteVideoRef.current) {
           remoteVideoRef.current.srcObject = event.streams[0];
-          remoteVideoRef.current.play().catch(console.error);
+          remoteVideoRef.current.onloadedmetadata = () => {
+            console.log('✅ Remote video metadata loaded');
+            remoteVideoRef.current.play().catch(console.error);
+          };
         }
       }
     };
@@ -242,6 +266,8 @@ export default function App() {
   // Detection WS (listen for results) and frame POST loop
   useEffect(() => {
     let loopId = 0;
+    const params = new URLSearchParams(window.location.search);
+    const isPhone = params.get("peer") === "1";
 
     if (detecting) {
       // Open detection WebSocket - only on PC
@@ -267,33 +293,24 @@ export default function App() {
       
 
 
-      // Frame capture loop - detect on both cameras
+      // Frame capture loop - detect only on remote camera
       const tickDetect = async () => {
-        if (!inFlightRef.current) {
-          // Prioritize remote camera if available, fallback to local
-          const src = (remoteVideoRef.current && remoteVideoRef.current.readyState >= 2) 
-            ? remoteVideoRef.current 
-            : localVideoRef.current;
-            
-          if (src && src.readyState >= 2) {
-            const frame = captureFrame(src, 224, 224);
-            if (frame) {
-              inFlightRef.current = true;
-              fetch(`/api/detect`, {
-                method: "POST",
-                headers: { 
-                  "Content-Type": "application/json",
-                  "X-Requested-With": "XMLHttpRequest",
-                  "ngrok-skip-browser-warning": "true"
-                },
-                body: JSON.stringify({ 
-                  image: frame, 
-                  frame_id: String(Date.now()), 
-                  capture_ts: Date.now(),
-                  source: src === remoteVideoRef.current ? 'remote' : 'local'
-                })
-              }).finally(() => { inFlightRef.current = false; });
-            }
+        if (!inFlightRef.current && remoteVideoRef.current && remoteVideoRef.current.readyState >= 2 && connectionStatus === 'connected') {
+          const frame = captureFrame(remoteVideoRef.current, 224, 224);
+          if (frame) {
+            inFlightRef.current = true;
+            fetch(`/api/detect`, {
+              method: "POST",
+              headers: { 
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true"
+              },
+              body: JSON.stringify({ 
+                image: frame, 
+                frame_id: String(Date.now()), 
+                capture_ts: Date.now()
+              })
+            }).finally(() => { inFlightRef.current = false; });
           }
         }
         loopId = window.setTimeout(tickDetect, 200);
@@ -328,7 +345,7 @@ export default function App() {
         {!isPhone && (
           <>
             <button className="primary" onClick={connect} disabled={!running}>Connect Phone</button>
-            <button className={detecting ? "primary active" : "primary"} onClick={() => setDetecting(!detecting)} disabled={!running}>
+            <button className={detecting ? "primary active" : "primary"} onClick={() => setDetecting(!detecting)} disabled={!running || connectionStatus !== 'connected'}>
               {detecting ? "Stop Detection" : "Start Detection"}
             </button>
           </>
@@ -359,7 +376,7 @@ export default function App() {
             <h3>Phone Camera</h3>
             <div className="media-stack">
               <video ref={localVideoRef} autoPlay playsInline muted />
-              <canvas ref={localCanvasRef} width="640" height="480" />
+              <canvas ref={localCanvasRef} />
             </div>
           </div>
         ) : (
@@ -374,8 +391,33 @@ export default function App() {
             <div className="panel">
               <h3>Phone Camera (Remote) {connectionStatus === 'connected' ? '✅' : '❌'}</h3>
               <div className="media-frame">
-                <video ref={remoteVideoRef} autoPlay playsInline muted />
-                <canvas ref={remoteCanvasRef} width="640" height="480" />
+                <video 
+                  ref={remoteVideoRef} 
+                  autoPlay 
+                  playsInline 
+                  muted 
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    minHeight: '240px',
+                    background: connectionStatus === 'connected' ? 'transparent' : '#333',
+                    borderRadius: '10px'
+                  }}
+                />
+                <canvas ref={remoteCanvasRef} style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none', zIndex: 1 }} />
+                {connectionStatus !== 'connected' && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: '#999',
+                    fontSize: '1.1rem',
+                    textAlign: 'center'
+                  }}>
+                    Waiting for phone connection...
+                  </div>
+                )}
               </div>
             </div>
           </>
